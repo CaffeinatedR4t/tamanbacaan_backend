@@ -2,7 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const dns = require('dns');
-const User = require('./models/User');
+const User = require('./models/user');
 
 // Force Node.js to use Google DNS and native resolver (same as server.js)
 dns.setServers(['8.8.8.8', '8.8.4.4']);
