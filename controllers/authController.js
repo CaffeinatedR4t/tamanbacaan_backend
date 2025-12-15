@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
     } = req.body;
 
     // Validation
-    if (!fullName || ! nik || !email || !password || !addressRtRw || !addressKelurahan || ! addressKecamatan || !phoneNumber) {
+   if (!fullName || !nik || !email || !password || !addressRtRw || !phoneNumber) {
       return res. status(400).json({
         success: false,
         message:  'All required fields must be filled'
@@ -108,12 +108,16 @@ exports.register = async (req, res) => {
     // Prepare user response (exclude password)
     const userResponse = {
       id: user._id,
-      fullName: user. fullName,
+      fullName: user.fullName,
       email: user.email,
       role: user.role,
       nik: user.nik,
-      address: `${user.addressRtRw}, ${user.addressKelurahan}, ${user.addressKecamatan}`,
-      phoneNumber: user.phoneNumber,
+      
+      addressRtRw: user.addressRtRw || "",
+      addressKelurahan: user.addressKelurahan || "Kelurahan Cipete", 
+      addressKecamatan: user.addressKecamatan || "Kecamatan Cilandak", 
+      
+      phoneNumber: user.phoneNumber || "",
       isChild: user.isChild,
       isVerified: user.isVerified
     };
@@ -194,10 +198,14 @@ exports.login = async (req, res) => {
       email: user.email,
       role: user.role,
       nik: user.nik,
-      address: `${user.addressRtRw}, ${user.addressKelurahan}, ${user.addressKecamatan}`,
-      phoneNumber: user.phoneNumber,
+      
+      addressRtRw: user.addressRtRw || "",
+      addressKelurahan: user.addressKelurahan || "Kelurahan Cipete", 
+      addressKecamatan: user.addressKecamatan || "Kecamatan Cilandak", 
+      
+      phoneNumber: user.phoneNumber || "",
       isChild: user.isChild,
-      isVerified: user. isVerified
+      isVerified: user.isVerified
     };
 
     res.status(200).json({
@@ -235,14 +243,18 @@ exports.getMe = async (req, res) => {
     }
 
     const userResponse = {
-      id:  user._id,
+      id: user._id,
       fullName: user.fullName,
       email: user.email,
       role: user.role,
       nik: user.nik,
-      address: `${user.addressRtRw}, ${user.addressKelurahan}, ${user.addressKecamatan}`,
-      phoneNumber: user.phoneNumber,
-      isChild:  user.isChild,
+      
+      addressRtRw: user.addressRtRw || "",
+      addressKelurahan: user.addressKelurahan || "Kelurahan Cipete", 
+      addressKecamatan: user.addressKecamatan || "Kecamatan Cilandak", 
+      
+      phoneNumber: user.phoneNumber || "",
+      isChild: user.isChild,
       isVerified: user.isVerified
     };
 

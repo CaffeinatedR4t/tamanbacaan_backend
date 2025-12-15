@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express. Router();
+const router = express.Router();
 const User = require('../models/User');
 
-// Get all users
+// Get all users (Admin needs this)
 router.get('/', async (req, res) => {
   try {
     const users = await User.find()
@@ -12,7 +12,23 @@ router.get('/', async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       message: 'Server error', 
-      error: error. message 
+      error: error.message 
+    });
+  }
+});
+
+// [BARU] Get Single User by ID (Dibutuhkan untuk Logic Force Logout di Android)
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
     });
   }
 });
@@ -25,28 +41,32 @@ router.get('/pending', async (req, res) => {
       .sort({ createdAt: -1 });
     res.json(users);
   } catch (error) {
-    res.status(500). json({ 
+    res.status(500).json({ 
       message: 'Server error', 
       error: error.message 
     });
   }
 });
 
-// Verify user
-router.put('/:id/verify', async (req, res) => {
+// [DIPERBAIKI] Update User Status (Verify OR Unverify)
+// Menggantikan route '/:id/verify' agar bisa handle true/false dari Android
+router.put('/:id/status', async (req, res) => {
   try {
+    // Ambil status dari body yang dikirim Android
+    const { isVerified } = req.body; 
+    
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { isVerified: true },
+      { isVerified: isVerified }, // Update sesuai input (bisa true atau false)
       { new: true }
-    ). select('-password');
+    ).select('-password');
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     
     res.json({ 
-      message: 'User verified successfully',
+      message: `User status updated to ${isVerified}`,
       user 
     });
   } catch (error) {
