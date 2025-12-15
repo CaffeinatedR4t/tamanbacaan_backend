@@ -16,10 +16,10 @@ app.use(express. json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB Connection with DNS fix
-mongoose.connect(process.env. MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI, { // Removed space
   family: 4,
   serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS:  45000,
+  socketTimeoutMS: 45000,
   connectTimeoutMS: 30000,
 })
   .then(() => console.log('✅ Connected to MongoDB Atlas'))
