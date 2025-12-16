@@ -361,3 +361,40 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
+
+exports.updateMe = async (req, res) => {
+  try {
+    const userId = req.user.userId; // dari JWT (authMiddleware)
+    const { fullName, email, addressRtRw, addressKelurahan, addressKecamatan } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        fullName,
+        email,
+        addressRtRw,
+        addressKelurahan,
+        addressKecamatan
+      },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      user: updatedUser
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update profile',
+      error: error.message
+    });
+  }
+};
