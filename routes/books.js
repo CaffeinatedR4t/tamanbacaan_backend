@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
+const bookController = require('../controllers/bookController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -47,18 +49,47 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create new book
-router. post('/', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const book = new Book(req.body);
-    await book.save();
-    res.status(201).json(book);
-  } catch (error) {
-    res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
+    const {
+      title,
+      author,
+      category,
+      publisher,
+      year,
+      isbn,
+      stock,
+      totalCopies,
+      coverImage,
+      description
+    } = req.body;
+
+    if (!title || !author || !category) {
+      return res.status(400).json({ message: 'Field wajib belum diisi' });
+    }
+
+    const book = new Book({
+      title,
+      author,
+      category,
+      publisher,
+      year,
+      isbn,
+      stock,
+      totalCopies,
+      coverImage,
+      description,
+      isAvailable: stock > 0
     });
+
+    const savedBook = await book.save();
+    res.status(201).json(savedBook);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
+
 
 // Update book
 router.put('/:id', async (req, res) => {
