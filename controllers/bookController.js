@@ -62,13 +62,9 @@ exports.getRecommendations = async (req, res) => {
 
     // 2. Jika user belum pernah meminjam, kembalikan buku terbaru (Cold Start Problem)
     if (userHistory.length === 0) {
-      const newBooks = await Book.find({ isAvailable: true })
-        .sort({ createdAt: -1 })
-        .limit(10);
       return res.json({ 
-        source: 'latest', 
-        message: 'Belum ada riwayat, menampilkan buku terbaru', 
-        data: newBooks 
+        source: 'none', 
+        data: [] 
       });
     }
 
