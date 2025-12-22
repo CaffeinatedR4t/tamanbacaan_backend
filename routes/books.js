@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/Book');
 const bookController = require('../controllers/bookController');
-const authMiddleware = require('../middleware/authMiddleware');
 
 // Get all books
 router.get('/', async (req, res) => {
@@ -31,6 +30,10 @@ router.get('/', async (req, res) => {
     });
   }
 });
+
+
+// Route Rekomendasi ML
+router.get('/recommendations/:userId', bookController.getRecommendations);
 
 // Get book by ID
 router.get('/:id', async (req, res) => {
