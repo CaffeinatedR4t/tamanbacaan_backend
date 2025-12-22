@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   isChild: { type: Boolean, default: false },
   role: { type: String, enum: ['MEMBER', 'ADMIN'], default: 'MEMBER' },
   isVerified: { type: Boolean, default: false },
+  bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
   createdAt: { type: Date, default: Date.now }
 });
 
