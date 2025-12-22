@@ -93,6 +93,36 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/:id/review', async (req, res) => {
+  try {
+    const { userId, userName, rating, comment } = req.body;
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' });
+    }
+
+    // 1. Tambahkan Review ke Array
+    const newReview = {
+      userId,
+      userName,
+      rating: Number(rating),
+      comment
+    };
+    book.reviews.push(newReview);
+
+    // 2. Hitung Ulang Rata-rata Rating
+    const totalRating = book.reviews.reduce((sum, review) => sum + review.rating, 0);
+    book.avgRating = (totalRating / book.reviews.length).toFixed(1); // 1 desimal (e.g. 4.5)
+    book.totalReviews = book.reviews.length;
+
+    await book.save();
+
+    res.json({ message: 'Review added successfully', book });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
 
 // Update book
 router.put('/:id', async (req, res) => {

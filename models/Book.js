@@ -12,6 +12,17 @@ const bookSchema = new mongoose. Schema({
   coverImage: { type: String },
   description: { type: String },
   isAvailable: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now },
+  avgRating: { type: Number, default: 0 },
+  totalReviews: { type: Number, default: 0 },
+  reviews: [{
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    userName: String,
+    rating: Number,
+    comment: String,
+    createdAt: { type: Date, default: Date.now }
+  }],
+  
   createdAt: { type: Date, default: Date.now }
 });
 
